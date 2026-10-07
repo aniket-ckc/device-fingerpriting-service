@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: fingerprint
+      POSTGRES_PASSWORD: fingerprint
+      POSTGRES_DB: fingerprint
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL_PROD: postgresql://fingerprint:fingerprint@postgres/fingerprint
+      ENVIRONMENT: production
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app
+
+volumes:
+  postgres_data:
